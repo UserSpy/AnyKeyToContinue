@@ -6,7 +6,7 @@ public class ChatBubble : MonoBehaviour
 {
     public TextMeshPro chatText; 
     public float messageChangeTime = 10f;
-    private string firstMessage = "Hello there! Jump over here!";
+    private string firstMessage = "Hello there! Come over here!";
     private string secondMessage = "Do you not know how to move?";
     private string thirdMessage = "Maybe try every key?";
 

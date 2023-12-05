@@ -8,6 +8,7 @@ using TMPro;
 public class ControlsManager : MonoBehaviour
 {
     public GameObject player;
+    public TextMeshProUGUI inGameControls;
     public TextMeshProUGUI notice;
     public TextMeshProUGUI left;
     public Button rebindLeft;
@@ -34,9 +35,13 @@ public class ControlsManager : MonoBehaviour
         rebindSprint.gameObject.SetActive(PlayerPrefs.GetInt("SprintState", 0) == 3);
         rebindJump.gameObject.SetActive(PlayerPrefs.GetInt("JumpState", 0) == 3);
 
+        string controlsText = "Controls:\nPause: Esc\n";
+
         if (PlayerPrefs.GetInt("MoveLeftState", 0) > 1)
         {
             left.text = "Left: " + (KeyCode)PlayerPrefs.GetInt("MoveLeft", (int)KeyCode.A);
+            controlsText += "Left: " + (KeyCode)PlayerPrefs.GetInt("MoveLeft", (int)KeyCode.A) + "\n";
+            Debug.Log("Setting Left");
         }
         else
         {
@@ -45,7 +50,8 @@ public class ControlsManager : MonoBehaviour
         if (PlayerPrefs.GetInt("MoveRightState", 0) > 1)
         {
             right.text = "Right: " + (KeyCode)PlayerPrefs.GetInt("MoveRight", (int)KeyCode.A);
-
+            controlsText += "Right: " + (KeyCode)PlayerPrefs.GetInt("MoveRight", (int)KeyCode.D) + "\n";
+            Debug.Log("Setting Right");
         }
         else
         {
@@ -54,7 +60,7 @@ public class ControlsManager : MonoBehaviour
         if (PlayerPrefs.GetInt("SprintState", 0) > 1)
         {
             sprint.text = "Sprint: " + (KeyCode)PlayerPrefs.GetInt("Sprint", (int)KeyCode.A);
-
+            controlsText += "Sprint: " + (KeyCode)PlayerPrefs.GetInt("Sprint", (int)KeyCode.LeftShift) + "\n";
         }
         else
         {
@@ -63,13 +69,14 @@ public class ControlsManager : MonoBehaviour
         if (PlayerPrefs.GetInt("JumpState", 0) > 1)
         {
             jump.text = "Jump: " + (KeyCode)PlayerPrefs.GetInt("Jump", (int)KeyCode.A);
-
+            controlsText += "Jump: " + (KeyCode)PlayerPrefs.GetInt("Jump", (int)KeyCode.Space) + "\n";
         }
         else
         {
             jump.text = "";
         }
 
+        inGameControls.text = controlsText;
 
     }
 

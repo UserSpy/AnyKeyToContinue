@@ -8,9 +8,9 @@ using TMPro;
 
 public class LevelUpController : MonoBehaviour
 {
+    public ControlsManager controlsManager;
     public int gameplayBuild = 2;
     public float levelUpTime = 30f;
-    private float timer = 0f;
     public GameObject player;
     public TextMeshProUGUI notice;
     public TextMeshProUGUI left;
@@ -47,7 +47,8 @@ public class LevelUpController : MonoBehaviour
         learnRight.gameObject.SetActive(PlayerPrefs.GetInt("MoveRightState", 0) == 1);
         learnSprint.gameObject.SetActive(PlayerPrefs.GetInt("SprintState", 0) == 1);
         learnJump.gameObject.SetActive(PlayerPrefs.GetInt("JumpState", 0) == 1);
-
+        Debug.Log(PlayerPrefs.GetInt("MoveLeftState", 0));
+        Debug.Log(PlayerPrefs.GetInt("MoveRightState", 0));
 
         if (PlayerPrefs.GetInt("MoveLeftState", 0) == 2)
         {
@@ -98,15 +99,16 @@ public class LevelUpController : MonoBehaviour
             jump.text = "";
         }
 
-
+        controlsManager.UpdateVisibility();
 
     }
 
     public void LearnMoveLeft()
     {
         int currentState = PlayerPrefs.GetInt("MoveLeftState", 0);
-        PlayerPrefs.SetInt("MoveLeftState", currentState + 1);
+        PlayerPrefs.SetInt("MoveLeftState", 2);
         PlayerPrefs.Save();
+        Debug.Log("Left state" + PlayerPrefs.GetInt("MoveLeftState", 0));
         TogglePause();
 
     }
@@ -114,8 +116,9 @@ public class LevelUpController : MonoBehaviour
     public void LearnMoveRight()
     {
         int currentState = PlayerPrefs.GetInt("MoveRightState", 0);
-        PlayerPrefs.SetInt("MoveRightState", currentState + 1);
+        PlayerPrefs.SetInt("MoveRightState", 2);
         PlayerPrefs.Save();
+        Debug.Log("Right state" + PlayerPrefs.GetInt("MoveRightState", 0));
         TogglePause();
 
     }
@@ -123,7 +126,7 @@ public class LevelUpController : MonoBehaviour
     public void LearnSprint()
     {
         int currentState = PlayerPrefs.GetInt("SprintState", 0);
-        PlayerPrefs.SetInt("SprintState", currentState + 1);
+        PlayerPrefs.SetInt("SprintState", 2);
         PlayerPrefs.Save();
         TogglePause();
 
@@ -132,7 +135,7 @@ public class LevelUpController : MonoBehaviour
     public void LearnJump()
     {
         int currentState = PlayerPrefs.GetInt("JumpState", 0);
-        PlayerPrefs.SetInt("JumpState", currentState + 1);
+        PlayerPrefs.SetInt("JumpState", 2);
         PlayerPrefs.Save();
         TogglePause();
     }
@@ -191,8 +194,19 @@ public class LevelUpController : MonoBehaviour
         IsGamePaused = !IsGamePaused;
         levelUp.SetActive(IsGamePaused);
         Time.timeScale = IsGamePaused ? 0 : 1;
+        player.GetComponent<PlayerMovement>().LoadControls();
+        UpdateVisibility();
     }
 
+    private void Awake()
+    {
+        if (PlayerPrefs.GetInt("SavedScene") != SceneManager.GetActiveScene().buildIndex)
+        {
+            TogglePause();
+        }
+        
+        UpdateVisibility();
+    }
     private void Update()
     {
         if (isRebinding)
@@ -235,17 +249,6 @@ public class LevelUpController : MonoBehaviour
                     }
                 }
             }
-        }
-        if (SceneManager.GetActiveScene().buildIndex == gameplayBuild && !IsGamePaused)
-        {
-            timer += Time.deltaTime; // Increment the timer by the time since the last frame.
-        }
-
-        if (timer >= levelUpTime)// Check if time has passed
-        {
-            TogglePause();
-            UpdateVisibility();
-            timer = 0f;
         }
     }
 

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
+    public float verticalOffset = 0.15f;
     public Transform target;
     public float multi = 1.1f;
     public float springBack = 2;
@@ -78,7 +79,6 @@ public class CameraMovement : MonoBehaviour
 
 
         currentPosition.y = Mathf.Clamp(currentPosition.y, rb.position.y - maxDistance, rb.position.y + maxDistance);
-
         transform.position = currentPosition;
 
         if (rb.velocity.magnitude < 0.1f)

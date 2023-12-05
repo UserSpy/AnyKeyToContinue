@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
+
     private Rigidbody2D rb;
     public float speed = 10.0f;
     public float sprintMulti = 1.5f;
@@ -92,7 +93,6 @@ public class PlayerMovement : MonoBehaviour
         sprintState = PlayerPrefs.GetInt("SprintState", 0);
         jump = (KeyCode)PlayerPrefs.GetInt("Jump", (int)KeyCode.Space);
         jumpState = PlayerPrefs.GetInt("JumpState", 0);
-        Debug.Log(jump);
     }
 
     void Start()
@@ -112,6 +112,13 @@ public class PlayerMovement : MonoBehaviour
             jump = GetRandomKeyAvoidJamming();
             SaveControls();
         }
+        int sceneID = SceneManager.GetActiveScene().buildIndex;
+        PlayerPrefs.SetInt("SavedScene", sceneID);
+        moveLeftState = PlayerPrefs.GetInt("MoveLeftState", 0);
+        moveRightState = PlayerPrefs.GetInt("MoveRightState", 0);
+        jumpState = PlayerPrefs.GetInt("JumpState", 0);
+        sprintState = PlayerPrefs.GetInt("SprintState", 0);
+        PlayerPrefs.Save();
     }
 
     // Update is called once per frame
@@ -120,7 +127,7 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKey(sprint))
         {
             finalSpeed = speed * sprintMulti;
-            if (sprintState == 0)
+            if (PlayerPrefs.GetInt("SprintState", 0) == 0)
             {
                 sprintState = 1;
                 SaveControls();
@@ -134,7 +141,7 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKey(moveLeft) && !Input.GetKey(moveRight))
         {
             rb.velocity = new Vector2(-finalSpeed, rb.velocity.y);
-            if (moveLeftState == 0)
+            if (PlayerPrefs.GetInt("MoveLeftState", 0) == 0)
             {
                 moveLeftState = 1;
                 SaveControls();
@@ -143,7 +150,7 @@ public class PlayerMovement : MonoBehaviour
         else if (Input.GetKey(moveRight) && !Input.GetKey(moveLeft))
         {
             rb.velocity = new Vector2(finalSpeed, rb.velocity.y);
-            if (moveRightState == 0)
+            if (PlayerPrefs.GetInt("MoveRightState", 0) == 0)
             {
                 moveRightState = 1;
                 SaveControls();
@@ -157,7 +164,7 @@ public class PlayerMovement : MonoBehaviour
         if (isGrounded && Input.GetKey(jump))
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
-            if (jumpState == 0)
+            if (PlayerPrefs.GetInt("JumpState", 0) == 0)
             {
                 jumpState = 1;
                 SaveControls();
